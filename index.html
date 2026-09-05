@@ -35,13 +35,16 @@
   .search input{flex:1;border:0;outline:0;padding:12px 8px;background:none}
   .search svg{width:18px;height:18px;stroke:var(--ink2);fill:none;stroke-width:2}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
-  .card{background:var(--panel);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);text-align:left;display:flex;flex-direction:column}
-  .card .thumb{aspect-ratio:4/3;background:#E4E7E2 center/cover no-repeat;display:grid;place-items:center;color:var(--ink2);font-size:13px;position:relative}
-  .card .n{position:absolute;right:6px;bottom:6px;background:rgba(27,39,53,.85);color:#fff;font-size:12px;padding:2px 7px;border-radius:12px}
-  .card .t{padding:8px 10px 10px}
+  .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .filters select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);font-size:14px;color:var(--ink)}
+  .grid{display:flex;flex-direction:column;gap:8px}
+  .card{background:var(--panel);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);text-align:left;display:flex;flex-direction:row;align-items:stretch;width:100%}
+  .card .thumb{flex:0 0 84px;min-height:72px;background:#E4E7E2 center/cover no-repeat;display:grid;place-items:center;color:var(--ink2);font-size:11px;position:relative;text-align:center;padding:4px}
+  .card .n{position:absolute;right:4px;bottom:4px;background:rgba(27,39,53,.85);color:#fff;font-size:11px;padding:1px 6px;border-radius:12px}
+  .card .t{padding:8px 10px;flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px}
   .card .t b{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .card .t span{display:block;font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .t .co{font-size:12px;color:var(--ink2);opacity:.85}
 
   .empty{text-align:center;color:var(--ink2);padding:60px 20px}
   .empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
@@ -63,6 +66,8 @@
   .addph{aspect-ratio:1;border:2px dashed var(--line);border-radius:8px;display:grid;place-items:center;color:var(--ink2);font-size:13px;text-align:center;padding:6px;background:var(--panel)}
   .addph svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2;margin-bottom:2px}
   .row{display:flex;gap:10px;margin-top:6px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row2 .field{margin:0 0 14px}
   .btn{flex:1;padding:14px;border-radius:var(--r);font-weight:600;text-align:center}
   .btn.primary{background:var(--ink);color:#fff}
   .btn.accent{background:var(--accent);color:var(--accent-ink)}
@@ -117,7 +122,11 @@
   <section id="listView" class="hidden">
     <div class="search">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Ieškoti pagal pavadinimą ar aprašymą">
+      <input id="q" type="search" placeholder="Ieškoti: pavadinimas, VIN, įmonė, kodas…">
+    </div>
+    <div class="filters">
+      <select id="fltBrand"><option value="">Visos markės</option></select>
+      <select id="fltYear"><option value="">Visi metai</option></select>
     </div>
     <div class="grid" id="grid"></div>
     <div class="empty hidden" id="empty"><b>Dar nėra nė vieno vilkiko</b>Spauskite „Naujas" ir nufotografuokite pirmąjį.</div>
@@ -126,8 +135,20 @@
 
   <!-- EDIT -->
   <section id="editView" class="hidden">
-    <div class="field"><label for="fTitle">Pavadinimas</label><input id="fTitle" placeholder="pvz. Volvo FH 500 2019"></div>
-    <div class="field"><label for="fDesc">Aprašymas</label><textarea id="fDesc" placeholder="Rida, būklė, kaina, pastabos…"></textarea></div>
+    <div class="field"><label for="fTitle">Pavadinimas</label><input id="fTitle" placeholder="pvz. FH 500 4x2"></div>
+    <div class="field"><label for="fBrand">Markė</label><input id="fBrand" placeholder="pvz. Volvo" autocomplete="off"></div>
+    <div class="row2">
+      <div class="field"><label for="fYear">Pagaminimo data</label><input id="fYear" placeholder="pvz. 2019-05" inputmode="numeric"></div>
+      <div class="field"><label for="fKm">Rida (km)</label><input id="fKm" placeholder="pvz. 650000" inputmode="numeric"></div>
+    </div>
+    <div class="field"><label for="fVin">Kėbulo numeris (VIN)</label><input id="fVin" placeholder="17 simbolių" autocapitalize="characters" spellcheck="false" maxlength="17"></div>
+    <div class="field"><label for="fDesc">Aprašymas</label><textarea id="fDesc" placeholder="Būklė, komplektacija, pastabos…"></textarea></div>
+    <div class="row2">
+      <div class="field"><label for="fCompany">Įmonė</label><input id="fCompany" placeholder="pvz. UAB Transportas"></div>
+      <div class="field"><label for="fCode">Įmonės kodas</label><input id="fCode" placeholder="pvz. 123456789" inputmode="numeric"></div>
+    </div>
+    <div class="field"><label for="fLoc">Lokacija</label><input id="fLoc" placeholder="pvz. Vilnius, LT"></div>
+    <div class="field"><label for="fNote">Komentaras</label><textarea id="fNote" placeholder="Papildomos pastabos…"></textarea></div>
     <div class="field"><label>Nuotraukos</label>
       <div class="photos" id="photos"></div>
       <div class="row">
@@ -200,6 +221,7 @@ let col=null,unsub=null;
 const $=id=>document.getElementById(id);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const fmt=d=>new Date(d).toLocaleString('lt-LT',{dateStyle:'medium',timeStyle:'short'});
+function fmtKm(v){return String(v).replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
 let toastT;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
 const busy=on=>$('busy').classList.toggle('hidden',!on);
 const src=b64=>'data:image/jpeg;base64,'+b64;
@@ -258,9 +280,17 @@ window.addEventListener('online',()=>$('sync').classList.remove('off'));
 window.addEventListener('offline',()=>$('sync').classList.add('off'));
 
 /* ---------- list ---------- */
+function yearOf(t){const m=String(t.year||'').match(/\d{4}/);return m?m[0]:''}
+function fillSelect(id,values,current){const sel=$(id);const first=sel.options[0].outerHTML;sel.innerHTML=first+values.map(v=>`<option value="${v.replace(/"/g,'&quot;')}">${v}</option>`).join('');sel.value=values.includes(current)?current:''}
 function renderList(){
   const q=$('q').value.trim().toLowerCase();
-  const list=trucks.filter(t=>!q||((t.title||'')+' '+(t.desc||'')).toLowerCase().includes(q));
+  const brands=[...new Set(trucks.map(t=>(t.brand||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'lt'));
+  const years=[...new Set(trucks.map(yearOf).filter(Boolean))].sort().reverse();
+  fillSelect('fltBrand',brands,$('fltBrand').value);fillSelect('fltYear',years,$('fltYear').value);
+  const fb=$('fltBrand').value,fy=$('fltYear').value;
+  const list=trucks.filter(t=>
+    (!fb||(t.brand||'').trim()===fb)&&(!fy||yearOf(t)===fy)&&
+    (!q||[t.brand,t.title,t.year,t.km,t.vin,t.desc,t.company,t.code,t.location,t.note].map(v=>v||'').join(' ').toLowerCase().includes(q)));
   $('count').textContent=trucks.length||'';
   $('empty').classList.toggle('hidden',trucks.length>0||!$('loading').classList.contains('hidden'));
   const g=$('grid');g.innerHTML='';
@@ -270,24 +300,26 @@ function renderList(){
     if(t.thumb){th.style.backgroundImage=`url(${src(t.thumb)})`;const n=document.createElement('span');n.className='n';n.textContent=t.photoCount||'';th.appendChild(n)}
     else th.textContent='Be nuotraukos';
     const tt=document.createElement('div');tt.className='t';tt.innerHTML='<b></b><span></span>';
-    tt.querySelector('b').textContent=t.title||'Be pavadinimo';tt.querySelector('span').textContent=t.desc||fmt(t.updated);
+    tt.querySelector('b').textContent=[t.brand,t.title].filter(Boolean).join(' ')||'Be pavadinimo';
+    tt.querySelector('span').textContent=[t.year,t.km?fmtKm(t.km)+' km':''].filter(Boolean).join(' · ')||fmt(t.updated);
+    if(t.company){const co=document.createElement('span');co.className='co';co.textContent=t.company;tt.appendChild(co)}
     c.append(th,tt);c.onclick=()=>openEdit(t);g.appendChild(c);
   });
 }
-$('q').oninput=renderList;
+$('q').oninput=renderList;$('fltBrand').onchange=renderList;$('fltYear').onchange=renderList;
 
 /* ---------- edit ---------- */
 function show(view){
   const edit=view==='edit';
   $('listView').classList.toggle('hidden',edit);$('editView').classList.toggle('hidden',!edit);
   $('backBtn').classList.toggle('hidden',!edit);$('fab').classList.toggle('hidden',edit);$('menuBtn').classList.toggle('hidden',edit);
-  $('title').textContent=edit?(cur.title||'Naujas vilkikas'):'Trucks-Trailers';
+  $('title').textContent=edit?([cur.brand,cur.title].filter(Boolean).join(' ')||'Naujas vilkikas'):'Trucks-Trailers';
   window.scrollTo(0,0);
 }
 async function openEdit(t){
-  cur=t?{...t}:{id:uid(),title:'',desc:'',created:Date.now(),updated:Date.now(),isNew:true};
+  cur=t?{...t}:{id:uid(),brand:'',title:'',year:'',km:'',vin:'',desc:'',company:'',code:'',location:'',note:'',created:Date.now(),updated:Date.now(),isNew:true};
   curPhotos=[];removed=[];
-  $('fTitle').value=cur.title||'';$('fDesc').value=cur.desc||'';
+  $('fBrand').value=cur.brand||'';$('fCode').value=cur.code||'';$('fLoc').value=cur.location||'';$('fNote').value=cur.note||'';$('fTitle').value=cur.title||'';$('fYear').value=cur.year||'';$('fKm').value=cur.km||'';$('fVin').value=cur.vin||'';$('fDesc').value=cur.desc||'';$('fCompany').value=cur.company||'';
   $('delBtn').classList.toggle('hidden',!t);
   $('meta').textContent=t?`Sukurta ${fmt(t.created)} · pakeista ${fmt(t.updated)}`:'';
   renderPhotos();show('edit');history.pushState({edit:1},'');
@@ -321,8 +353,8 @@ $('camIn').onchange=e=>{addFiles([...e.target.files]);e.target.value=''};
 $('galIn').onchange=e=>{addFiles([...e.target.files]);e.target.value=''};
 
 $('saveBtn').onclick=async()=>{
-  const title=$('fTitle').value.trim(),desc=$('fDesc').value.trim();
-  if(!title&&!desc&&!curPhotos.length){toast('Įrašas tuščias');return}
+  const title=$('fTitle').value.trim(),desc=$('fDesc').value.trim(),year=$('fYear').value.trim(),km=$('fKm').value.replace(/\D/g,''),vin=$('fVin').value.trim().toUpperCase(),company=$('fCompany').value.trim(),brand=$('fBrand').value.trim(),code=$('fCode').value.trim(),location=$('fLoc').value.trim(),note=$('fNote').value.trim();
+  if(!title&&!brand&&!desc&&!year&&!km&&!vin&&!company&&!code&&!location&&!note&&!curPhotos.length){toast('Įrašas tuščias');return}
   busy(true);$('busy').textContent='Saugoma…';
   try{
     const ref=col.doc(cur.id);
@@ -333,7 +365,7 @@ $('saveBtn').onclick=async()=>{
       if(!ph.saved)await ref.collection('photos').doc(ph.id).set({data:ph.data,order:i,created:Date.now()});
       else await ref.collection('photos').doc(ph.id).set({order:i},{merge:true});
     }
-    await ref.set({title,desc,thumb,photoCount:curPhotos.length,created:cur.created||Date.now(),updated:Date.now()});
+    await ref.set({brand,title,year,km,vin,desc,company,code,location,note,thumb,photoCount:curPhotos.length,created:cur.created||Date.now(),updated:Date.now()});
     toast('Išsaugota');goBack();
   }catch(e){toast('Nepavyko išsaugoti: '+(e.code||e.message))}
   busy(false);$('busy').textContent='Apdorojama…';
@@ -369,7 +401,7 @@ $('expBtn').onclick=async()=>{
   busy(true);
   try{const out=[];
     for(const t of trucks){const snap=await col.doc(t.id).collection('photos').orderBy('order').get();
-      out.push({id:t.id,title:t.title,desc:t.desc,created:t.created,updated:t.updated,photos:snap.docs.map(d=>d.data().data)})}
+      out.push({id:t.id,brand:t.brand||'',title:t.title,year:t.year||'',km:t.km||'',vin:t.vin||'',desc:t.desc,company:t.company||'',code:t.code||'',location:t.location||'',note:t.note||'',created:t.created,updated:t.updated,photos:snap.docs.map(d=>d.data().data)})}
     const json=JSON.stringify({app:'vilkikai',v:1,exported:Date.now(),trucks:out});
     const file=new File([json],`vilkikai-${new Date().toISOString().slice(0,10)}.json`,{type:'application/json'});
     busy(false);
