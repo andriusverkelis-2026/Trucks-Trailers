@@ -7,7 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Trucks-Trailers</title>
-<link rel="manifest" id="manifest">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root{
     --bg:#F3F4F1; --panel:#FFFFFF; --ink:#1B2735; --ink2:#5C6673; --line:#DDE1DC;
@@ -209,13 +211,6 @@ const fs=firebase.firestore();
 fs.settings({experimentalAutoDetectLongPolling:true,merge:true});
 fs.enablePersistence({synchronizeTabs:true}).catch(()=>{});
 let col=null,unsub=null;
-
-/* ---------- manifest ---------- */
-(function(){
-  const icon='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#1B2735"/><path d="M96 320V208h192v112M288 240h80l48 56v24H96" fill="none" stroke="#E9A800" stroke-width="28" stroke-linejoin="round"/><circle cx="160" cy="340" r="30" fill="#E9A800"/><circle cx="384" cy="340" r="30" fill="#E9A800"/></svg>');
-  const m={name:"Trucks-Trailers",short_name:"Trucks-Trailers",start_url:".",display:"standalone",background_color:"#F3F4F1",theme_color:"#1B2735",icons:[{src:icon,sizes:"512x512",type:"image/svg+xml",purpose:"any"}]};
-  document.getElementById('manifest').href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m));
-})();
 
 /* ---------- helpers ---------- */
 const $=id=>document.getElementById(id);
